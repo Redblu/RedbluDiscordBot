@@ -4,7 +4,7 @@ const Discord = require('discord.js');
 const config = require('./config.json');
 
 // Discord.js import
-const client = new Discord.Client();
+const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
@@ -34,9 +34,46 @@ client.on('ready', () => {
 
 client.on('message', function(message) {
 
+	// Handle textual message
 	message = scanMessageModule.scanMessage(message);
 	if(message != null){
 		commandManagerModule.manageCommand(message);
 	}
 
 });
+
+
+client.on('messageReactionAdd', function(messageReaction, user){
+	if(messageReaction.message.id == config.ROLE_MESSAGE){
+		messageReaction.client.guilds.fetch(messageReaction.message.channel.guild.id).then((guild)=>{
+			guild.members.fetch(user.id).then((member)=>{
+				switch (messageReaction.emoji.name) {
+				case "🇫🇷":
+					member.roles.add("817894714753548340");
+				case "🇺🇸":
+					member.roles.add("817894757023744051");
+				default:
+					console.info("Invalid reaction.")
+				}
+			})
+		})
+	}
+})
+
+
+client.on('messageReactionRemove', function(messageReaction, user){
+	if(messageReaction.message.id == config.ROLE_MESSAGE){
+		messageReaction.client.guilds.fetch(messageReaction.message.channel.guild.id).then((guild)=>{
+			guild.members.fetch(user.id).then((member)=>{
+				switch (messageReaction.emoji.name) {
+				case "🇫🇷":
+					member.roles.remove("817894714753548340");
+				case "🇺🇸":
+					member.roles.remove("817894757023744051");
+				default:
+					console.info("Invalid reaction.")
+				}
+			})
+		})
+	}
+})
