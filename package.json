@@ -1,0 +1,23 @@
+{
+  "name": "discordbot",
+  "version": "1.0.0",
+  "description": "Redblu test discord bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Redblu/RedDiscordBot.git"
+  },
+  "author": "Redblu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Redblu/RedDiscordBot/issues"
+  },
+  "homepage": "https://github.com/Redblu/RedDiscordBot#readme",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "eslint": "^7.21.0"
+  }
+}
