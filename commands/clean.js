@@ -1,9 +1,33 @@
 
+const config = require('../config.json');
+
 module.exports = {
 	name: "clean",
 	desc: "Clear all bot and user command messages",
 	execute: function(message) {
-		const timeTaken = Date.now() - message.createdTimestamp;
-		message.reply(`Current ping is ${timeTaken}ms.`);
+		if (message.member.hasPermission("MANAGE_MESSAGES")) {
+			message.channel.messages.fetch()
+				.then(function(list){
+					// message.channel.bulkDelete(list);
+					let msgToDelete = [];
+					list.forEach((value, key, map) => {
+						if(value.author.id == message.client.user.id){
+							msgToDelete.push(list.get(key));
+						}
+						else if(value.content.charAt(0) == config.PREFIX){
+							msgToDelete.push(list.get(key));
+						}
+					})
+					message.channel.bulkDelete(msgToDelete);
+					if(msgToDelete.length > 0){
+						// La fonction ne peut delete que 50 messages à la fois
+						// La relancer si on a supprimer des messages
+						// Si on a rien supprimé, sert à rien de relancer, c'est qu'on a déjà tout clean
+						this.execute(message);
+					}
+				}, function(err){
+					message.channel.send("ERROR: ERROR CLEARING CHANNEL.")
+				})
+		}
 	}
 }

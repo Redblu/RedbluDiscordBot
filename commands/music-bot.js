@@ -23,7 +23,8 @@ module.exports = [
 				);
 			}
 
-			const songInfo = await ytdl.getInfo(args);
+			const songInfo = await extractYoutubeInfo(args);
+
 			const song = {
 				title: songInfo.videoDetails.title,
 				url: songInfo.videoDetails.video_url,
@@ -117,4 +118,16 @@ function play(guild, song) {
 		.on("error", error => console.error(error));
 	dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
 	serverQueue.textChannel.send(`Start playing: **${song.title}**`);
+}
+
+function extractYoutubeInfo(url){
+	// TODO : Handling url invalid
+	let ytInfos = ytdl.getInfo(url);
+
+	if(ytInfos == null){
+		return message.channel.send(
+			"No music found for : "+args
+		);
+	}
+	return ytInfos;
 }
