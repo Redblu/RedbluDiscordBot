@@ -11,6 +11,7 @@ module.exports = {
 			message.client.commands.get(command).execute(message, args);
 		} catch (error) {
 			console.error("ERROR -- What's this command : "+message.content+" ??");
+			console.error(error);
 		}
 
 	}

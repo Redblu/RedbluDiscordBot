@@ -17,7 +17,10 @@
   },
   "homepage": "https://github.com/Redblu/RedDiscordBot#readme",
   "dependencies": {
+    "@discordjs/opus": "^0.4.0",
     "discord.js": "^12.5.1",
-    "eslint": "^7.21.0"
+    "eslint": "^7.21.0",
+    "ffmpeg-static": "^4.2.7",
+    "ytdl-core": "^4.5.0"
   }
 }
