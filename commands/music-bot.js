@@ -1,7 +1,8 @@
 
 const ytdl = require('ytdl-core');
 const config = require('../config.json');
-const voiceChannelId = config.VOICE_CHANNEL;
+const voiceChannelId = config.VOICE_CHANNEL_MUSIC;
+const textChannelId = config.TEXT_CHANNEL_MUSIC;
 
 const queue = new Map();
 
@@ -12,10 +13,18 @@ module.exports = [
 		execute: async function(message, args) {
 			const serverQueue = queue.get(message.guild.id);
 			const voiceChannel = message.member.voice.channel;
+			if(message.channel.id != textChannelId){
+				return;
+			}
 			if (!voiceChannel)
 				return message.channel.send(
 					"You need to be in a voice channel to play music!"
 				);
+			if(voiceChannel.id != voiceChannelId){
+				return message.channel.send(
+					"I cannot play music in this channel"
+				);
+			}
 			const permissions = voiceChannel.permissionsFor(message.client.user);
 			if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
 				return message.channel.send(

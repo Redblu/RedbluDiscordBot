@@ -1,6 +1,19 @@
 {
     "BOT_TOKEN": "ODE3NzM4OTA4NTIzNTYwOTgy.YEN4tA.GR__W04X1yFe6UAxCAy2diDDfFQ",
     "PREFIX": "!",
-    "VOICE_CHANNEL": "603649647130443819",
-    "ROLE_MESSAGE": "817899844386947083"
+    "VOICE_CHANNEL_MUSIC": "603649647130443819",
+    "TEXT_CHANNEL_MUSIC": "603649647130443815",
+    "ROLE_MANAGEMENT": {
+        "ROLE_MAIN_MESSAGE": "817899844386947083",
+        "ROLES": [
+            {
+                "REACTION": "\uD83C\uDDEB\uD83C\uDDF7",
+                "ROLE": "817894714753548340"
+            },
+            {
+                "REACTION": "\uD83C\uDDFA\uD83C\uDDF8",
+                "ROLE": "817894757023744051"
+            }
+        ]
+    }
 }

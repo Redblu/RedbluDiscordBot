@@ -44,34 +44,31 @@ client.on('message', function(message) {
 
 
 client.on('messageReactionAdd', function(messageReaction, user){
-	if(messageReaction.message.id == config.ROLE_MESSAGE){
+	let roleManagement = config.ROLE_MANAGEMENT;
+	if(messageReaction.message.id === roleManagement.ROLE_MAIN_MESSAGE){
 		messageReaction.client.guilds.fetch(messageReaction.message.channel.guild.id).then((guild)=>{
 			guild.members.fetch(user.id).then((member)=>{
-				switch (messageReaction.emoji.name) {
-				case "🇫🇷":
-					member.roles.add("817894714753548340");
-				case "🇺🇸":
-					member.roles.add("817894757023744051");
-				default:
-					console.info("Invalid reaction.")
+				for(let role of roleManagement.ROLES){
+					if(role.REACTION === messageReaction.emoji.name){
+						member.roles.add(role.ROLE);
+						break;
+					}
 				}
 			})
 		})
 	}
 })
 
-
 client.on('messageReactionRemove', function(messageReaction, user){
-	if(messageReaction.message.id == config.ROLE_MESSAGE){
+	let roleManagement = config.ROLE_MANAGEMENT;
+	if(messageReaction.message.id === roleManagement.ROLE_MAIN_MESSAGE){
 		messageReaction.client.guilds.fetch(messageReaction.message.channel.guild.id).then((guild)=>{
 			guild.members.fetch(user.id).then((member)=>{
-				switch (messageReaction.emoji.name) {
-				case "🇫🇷":
-					member.roles.remove("817894714753548340");
-				case "🇺🇸":
-					member.roles.remove("817894757023744051");
-				default:
-					console.info("Invalid reaction.")
+				for(let role of roleManagement.ROLES){
+					if(role.REACTION === messageReaction.emoji.name){
+						member.roles.remove(role.ROLE);
+						break;
+					}
 				}
 			})
 		})
