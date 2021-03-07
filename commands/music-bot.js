@@ -105,24 +105,16 @@ module.exports = [
 	{
 		privateFctCheckVoiceStatus: true,
 		checkVoiceStatus: function(voiceChannel){
-			if(voiceChannel.client.voice.connections.size == 1){
-				// Si plus que le bot connecté dans un des voice, l'arreter
+			let nbChannelBotConnection = 0;
+			voiceChannel.client.voice.connections.forEach((voiceConnection, key, map) => {
+				if(voiceConnection.channel.id == voiceChannel.id){
+					nbChannelBotConnection++;
+				}
+			});
+			if(nbChannelBotConnection == 1){
 				const serverQueue = queue.get(voiceChannel.guild.id);
 				serverQueue.songs = [];
 				serverQueue.connection.dispatcher.end();
-			}else if (voiceChannel.client.voice.connections.size > 1){
-				// TODO : Gérer le cas ou l'user change de channel au lieu de deco (ne trigger pas cette fct)
-				let nbChannelBotConnection = 0;
-				voiceChannel.client.voice.connections.forEach((voiceConnection, key, map) => {
-					if(voiceConnection.channel.id == voiceChannel.id){
-						nbChannelBotConnection++;
-					}
-				});
-				if(nbChannelBotConnection == 1){
-					const serverQueue = queue.get(voiceChannel.guild.id);
-					serverQueue.songs = [];
-					serverQueue.connection.dispatcher.end();
-				}
 			}
 		}
 	}

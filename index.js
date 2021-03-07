@@ -81,13 +81,8 @@ client.on('messageReactionRemove', function(messageReaction, user){
 })
 
 client.on('voiceStateUpdate', function(oldMember, newMember) {
-	let newUserChannel = newMember.channel;
 	let oldUserChannel = oldMember.channel;
-	if(oldUserChannel == null && newUserChannel != null) {
-		// User Joins a voice channel
-
-	} else if(newUserChannel == null && oldUserChannel != null){
-		// User leaves a voice channel
+	if(oldUserChannel != null){
 		for(let command of musicBot){
 			if(command.privateFctCheckVoiceStatus == true){
 				command.checkVoiceStatus(oldUserChannel);
