@@ -51,7 +51,12 @@ module.exports = [
 
 				queue.set(message.guild.id, queueContruct);
 
-				queueContruct.songs.push(song);
+				// TODO : Ne pas remettre une musique déjà dans la queue
+				if(true){
+					queueContruct.songs.push(song);
+				}else {
+
+				}
 
 				try {
 					let connection = await voiceChannel.join();
@@ -83,6 +88,14 @@ module.exports = [
 		execute: function(message) {
 			const serverQueue = queue.get(message.guild.id);
 			stop(message, serverQueue);
+		}
+	},
+	{
+		name: "queue",
+		desc : "Display the song queue info",
+		execute: function(message) {
+			const serverQueue = queue.get(message.guild.id);
+			displayQueue(message, serverQueue);
 		}
 	}
 ];
@@ -127,6 +140,20 @@ function play(guild, song) {
 		.on("error", error => console.error(error));
 	dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
 	serverQueue.textChannel.send(`Start playing: **${song.title}**`);
+}
+
+function displayQueue(message, serverQueue) {
+	if (!serverQueue) {
+		return message.channel.send("There is no song in the queue !\nType '!play youtube_url' to play a song.");
+	}
+
+	let msg = "**Current queue :**\n";
+	let cpt = 1;
+	for(let song of serverQueue.songs){
+		msg += "**"+cpt+".**"+song.title+ " \n";
+		cpt++;
+	}
+	return message.channel.send(msg);
 }
 
 function extractYoutubeInfo(url){
