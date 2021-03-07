@@ -21,6 +21,7 @@
     "discord.js": "^12.5.1",
     "eslint": "^7.21.0",
     "ffmpeg-static": "^4.2.7",
+    "valid-url": "^1.0.9",
     "ytdl-core": "^4.5.0"
   }
 }

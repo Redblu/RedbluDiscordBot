@@ -1,4 +1,4 @@
-
+let validUrl = require('valid-url');
 const ytdl = require('ytdl-core');
 const config = require('../config.json');
 const Discord = require('discord.js');
@@ -33,7 +33,11 @@ module.exports = [
 				);
 			}
 
-			const songInfo = await extractYoutubeInfo(args);
+			const songInfo = await extractYoutubeInfo(args[0], message);
+
+			if(songInfo == null){
+				return;
+			}
 
 			const song = {
 				title: songInfo.videoDetails.title,
@@ -180,16 +184,23 @@ function displayQueue(message, serverQueue) {
 	return message.channel.send(msg);
 }
 
-function extractYoutubeInfo(url){
-	// TODO : Handling url invalid
-	let ytInfos = ytdl.getInfo(url);
-
-	if(ytInfos == null){
-		return message.channel.send(
-			"No music found for : "+args
+function extractYoutubeInfo(url, message){
+	if(url == null){
+		message.channel.send(
+			"Type a youtube url after the command."
 		);
+		return null;
 	}
-	return ytInfos;
+
+	if (validUrl.isUri(url)){
+		return ytdl.getInfo(url);
+	}
+	else {
+		message.channel.send(
+			"No music found for : "+url
+		);
+		return null;
+	}
 }
 
 function songAlreadyInQueue(song, queue){
