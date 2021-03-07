@@ -1,6 +1,7 @@
 
 const ytdl = require('ytdl-core');
 const config = require('../config.json');
+const Discord = require('discord.js');
 const voiceChannelId = config.VOICE_CHANNEL_MUSIC;
 const textChannelId = config.TEXT_CHANNEL_MUSIC;
 
@@ -96,6 +97,30 @@ module.exports = [
 		execute: function(message) {
 			const serverQueue = queue.get(message.guild.id);
 			displayQueue(message, serverQueue);
+		}
+	},
+	{
+		privateFctCheckVoiceStatus: true,
+		checkVoiceStatus: function(voiceChannel){
+			if(voiceChannel.client.voice.connections.size == 1){
+				// Si plus que le bot connecté dans un des voice, l'arreter
+				const serverQueue = queue.get(voiceChannel.guild.id);
+				serverQueue.songs = [];
+				serverQueue.connection.dispatcher.end();
+			}else if (voiceChannel.client.voice.connections.size > 1){
+				// TODO : Gérer le cas ou l'user change de channel au lieu de deco (ne trigger pas cette fct)
+				let nbChannelBotConnection = 0;
+				voiceChannel.client.voice.connections.forEach((voiceConnection, key, map) => {
+					if(voiceConnection.channel.id == voiceChannel.id){
+						nbChannelBotConnection++;
+					}
+				});
+				if(nbChannelBotConnection == 1){
+					const serverQueue = queue.get(voiceChannel.guild.id);
+					serverQueue.songs = [];
+					serverQueue.connection.dispatcher.end();
+				}
+			}
 		}
 	}
 ];

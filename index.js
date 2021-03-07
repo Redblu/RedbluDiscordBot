@@ -11,16 +11,21 @@ for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	if(command instanceof Array){
 		for(let subCommand of command){
-			client.commands.set(subCommand.name, subCommand);
+			if(subCommand.name != null){
+				client.commands.set(subCommand.name, subCommand);
+			}
 		}
 	}else {
-		client.commands.set(command.name, command);
+		if(command.name != null){
+			client.commands.set(command.name, command);
+		}
 	}
 }
 
 // Custom manager import
 let scanMessageModule = require('./scan-message.js');
 let commandManagerModule = require('./command-manager.js');
+let musicBot = require('./commands/music-bot');
 
 
 ////// APP CORE CODE //////
@@ -72,5 +77,21 @@ client.on('messageReactionRemove', function(messageReaction, user){
 				}
 			})
 		})
+	}
+})
+
+client.on('voiceStateUpdate', function(oldMember, newMember) {
+	let newUserChannel = newMember.channel;
+	let oldUserChannel = oldMember.channel;
+	if(oldUserChannel == null && newUserChannel != null) {
+		// User Joins a voice channel
+
+	} else if(newUserChannel == null && oldUserChannel != null){
+		// User leaves a voice channel
+		for(let command of musicBot){
+			if(command.privateFctCheckVoiceStatus == true){
+				command.checkVoiceStatus(oldUserChannel);
+			}
+		}
 	}
 })
