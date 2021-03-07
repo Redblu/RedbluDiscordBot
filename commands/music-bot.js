@@ -52,12 +52,7 @@ module.exports = [
 
 				queue.set(message.guild.id, queueContruct);
 
-				// TODO : Ne pas remettre une musique déjà dans la queue
-				if(true){
-					queueContruct.songs.push(song);
-				}else {
-
-				}
+				queueContruct.songs.push(song);
 
 				try {
 					let connection = await voiceChannel.join();
@@ -70,8 +65,12 @@ module.exports = [
 				}
 			}
 			else {
-				serverQueue.songs.push(song);
-				return message.channel.send(`${song.title} has been added to the queue!`);
+				if(!songAlreadyInQueue(song,serverQueue)){
+					serverQueue.songs.push(song);
+					return message.channel.send(`${song.title} has been added to the queue !`);
+				}else{
+					return message.channel.send(`${song.title} is already in the queue !`);
+				}
 			}
 		}
 	},
@@ -175,7 +174,7 @@ function displayQueue(message, serverQueue) {
 	let msg = "**Current queue :**\n";
 	let cpt = 1;
 	for(let song of serverQueue.songs){
-		msg += "**"+cpt+".**"+song.title+ " \n";
+		msg += "**"+cpt+". **"+song.title+ " \n";
 		cpt++;
 	}
 	return message.channel.send(msg);
@@ -191,4 +190,13 @@ function extractYoutubeInfo(url){
 		);
 	}
 	return ytInfos;
+}
+
+function songAlreadyInQueue(song, queue){
+	for(let queuedSong of queue.songs){
+		if(queuedSong.title == song.title){
+			return true;
+		}
+	}
+	return false;
 }
